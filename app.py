@@ -5,20 +5,27 @@ import pandas as pd
 import pickle
 import gdown
 
-# Download model if not present
-if not os.path.exists("pipeline.pkl"):
-    url = "https://drive.google.com/uc?id=1rmdlpjDkLMCETbLNDO0PGZP8JErWWG8p"
-    r = requests.get(url)
-    with open("pipeline.pkl", "wb") as f:
-        f.write(r.content)
 
-#  Load the pipeline after download
-try:
-    with open("pipeline.pkl", "rb") as f:
-        pipeline = pickle.load(f)
-except Exception as e:
-    st.error("❌ Failed to load pipeline.pkl. Please check your file or link.")
-    pipeline = None
+# Google Drive file ID
+FILE_ID = "1rmdlpjDkLMCETbLNDO0PGZP8JErWWG8p"
+OUTPUT = "pipeline.pkl"
+
+# Download pipeline.pkl if not present
+if not os.path.exists(OUTPUT):
+    try:
+        url = f"https://drive.google.com/uc?id={FILE_ID}"
+        gdown.download(url, OUTPUT, quiet=False)
+    except Exception as e:
+        st.error(f"❌ Could not download pipeline.pkl. Error: {e}")
+
+# Load the pipeline
+pipeline = None
+if os.path.exists(OUTPUT):
+    try:
+        with open(OUTPUT, "rb") as f:
+            pipeline = pickle.load(f)
+    except Exception as e:
+        st.error(f"❌ Failed to load pipeline.pkl. Error: {e}")
 
 # Assuming your predict_crop_yield function
 def predict_crop_yield(pipeline, area, item, year, average_rain_fall_mm_per_year, pesticides_tonnes, avg_temp):
@@ -143,7 +150,7 @@ def main():
             'pesticides_tonnes': '',
             'average_rain_fall_mm_per_year': '',
             'avg_temp': '',
-            'area': 'Albania',
+            'area': 'India',
             'year': 2025
         }
         if st.session_state['reset']:

@@ -1,4 +1,5 @@
 streamlit
+gdown
 scikit-learn
 matplotlib
 fpdf

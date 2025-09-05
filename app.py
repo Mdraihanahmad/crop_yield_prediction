@@ -6,10 +6,19 @@ import pickle
 import gdown
 
 # Download model if not present
-if not os.path.exists('pipeline.pkl'):
+if not os.path.exists("pipeline.pkl"):
     url = "https://drive.google.com/uc?id=1rmdlpjDkLMCETbLNDO0PGZP8JErWWG8p"
-    gdown.download(url, "pipeline.pkl", quiet=False)
+    r = requests.get(url)
+    with open("pipeline.pkl", "wb") as f:
+        f.write(r.content)
 
+#  Load the pipeline after download
+try:
+    with open("pipeline.pkl", "rb") as f:
+        pipeline = pickle.load(f)
+except Exception as e:
+    st.error("❌ Failed to load pipeline.pkl. Please check your file or link.")
+    pipeline = None
 
 # Assuming your predict_crop_yield function
 def predict_crop_yield(pipeline, area, item, year, average_rain_fall_mm_per_year, pesticides_tonnes, avg_temp):

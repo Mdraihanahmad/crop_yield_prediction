@@ -1,8 +1,15 @@
+import os
+import requests
 import streamlit as st
 import pandas as pd
 import pickle
-# Load the trained pipeline (make sure you save it beforehand)
-pipeline = pickle.load(open('pipeline.pkl','rb'))
+
+# Download model if not present
+if not os.path.exists('pipeline.pkl'):
+    url = 'https://drive.google.com/open?id=1rmdlpjDkLMCETbLNDO0PGZP8JErWWG8p&usp=drive_fs'
+    r = requests.get(url)
+    with open('pipeline.pkl', 'wb') as f:
+        f.write(r.content)
 
 # Assuming your predict_crop_yield function
 def predict_crop_yield(pipeline, area, item, year, average_rain_fall_mm_per_year, pesticides_tonnes, avg_temp):

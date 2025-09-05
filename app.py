@@ -3,13 +3,13 @@ import requests
 import streamlit as st
 import pandas as pd
 import pickle
+import gdown
 
 # Download model if not present
 if not os.path.exists('pipeline.pkl'):
-    url = 'https://drive.google.com/open?id=1rmdlpjDkLMCETbLNDO0PGZP8JErWWG8p&usp=drive_fs'
-    r = requests.get(url)
-    with open('pipeline.pkl', 'wb') as f:
-        f.write(r.content)
+    url = "https://drive.google.com/uc?id=1rmdlpjDkLMCETbLNDO0PGZP8JErWWG8p"
+    gdown.download(url, "pipeline.pkl", quiet=False)
+
 
 # Assuming your predict_crop_yield function
 def predict_crop_yield(pipeline, area, item, year, average_rain_fall_mm_per_year, pesticides_tonnes, avg_temp):
